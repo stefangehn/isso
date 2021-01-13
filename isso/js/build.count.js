@@ -6,7 +6,7 @@
         "app/text/css": "app/text/dummy"
     },
 
-    name: "../../node_modules/almond/almond",
+    name: "/usr/share/nodejs/almond/almond.js",
     include: ['count'],
     out: "count.min.js",
     wrap: true
