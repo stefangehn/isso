@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- encoding: utf-8 -*-
 
+import os
+import setuptools.command.build_py
+import subprocess
 import sys
 
 from setuptools import setup, find_packages
@@ -12,6 +15,16 @@ if sys.version_info < (3, ):
     raise SystemExit("Python 2 is not supported.")
 elif (3, 0) <= sys.version_info < (3, 5):
     raise SystemExit("Python 3 versions < 3.5 are not supported.")
+
+
+class NpmBuildCommand(setuptools.command.build_py.build_py):
+    """Prefix Python build with node-based asset build"""
+
+    def run(self):
+        if 'TOX_ENV' not in os.environ:
+            subprocess.check_call(['make', 'init', 'js'])
+        setuptools.command.build_py.build_py.run(self)
+
 
 setup(
     name='isso',
@@ -40,5 +53,8 @@ setup(
     entry_points={
         'console_scripts':
             ['isso = isso:main'],
-    }
+    },
+    cmdclass={
+        'build_py': NpmBuildCommand,
+    },
 )
